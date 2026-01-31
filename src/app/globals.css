@@ -1,0 +1,98 @@
+@import "tailwindcss";
+
+:root {
+  /* LinkedIn Color Palette */
+  --linkedin-blue: #0A66C2;
+  --linkedin-blue-hover: #004182;
+  --linkedin-blue-light: #70B5F9;
+  --linkedin-green: #057642;
+  --linkedin-orange: #B24020;
+
+  /* Backgrounds */
+  --background: #F4F2EE;
+  --card-background: #FFFFFF;
+  --input-background: #EEF3F8;
+
+  /* Text Colors */
+  --text-primary: rgba(0, 0, 0, 0.9);
+  --text-secondary: rgba(0, 0, 0, 0.6);
+  --text-tertiary: rgba(0, 0, 0, 0.4);
+
+  /* Borders */
+  --border-color: rgba(0, 0, 0, 0.08);
+  --border-color-hover: rgba(0, 0, 0, 0.15);
+
+  /* Legacy support */
+  --foreground: var(--text-primary);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: -apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', 'Fira Sans', Ubuntu, Oxygen, 'Oxygen Sans', Cantarell, 'Droid Sans', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Lucida Grande', Helvetica, Arial, sans-serif;
+  height: 100vh;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* LinkedIn-style scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/* LinkedIn-style focus ring */
+*:focus-visible {
+  outline: 2px solid var(--linkedin-blue);
+  outline-offset: 2px;
+}
+
+/* LinkedIn button styles */
+.btn-linkedin-primary {
+  background-color: var(--linkedin-blue);
+  color: white;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  transition: background-color 0.15s;
+}
+
+.btn-linkedin-primary:hover {
+  background-color: var(--linkedin-blue-hover);
+}
+
+.btn-linkedin-secondary {
+  background-color: transparent;
+  color: var(--linkedin-blue);
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  border: 1px solid var(--linkedin-blue);
+  transition: all 0.15s;
+}
+
+.btn-linkedin-secondary:hover {
+  background-color: rgba(10, 102, 194, 0.1);
+  border-width: 2px;
+}
+
+/* LinkedIn card style */
+.linkedin-card {
+  background: var(--card-background);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
+}
