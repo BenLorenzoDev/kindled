@@ -35,7 +35,7 @@ export async function GET(req: Request) {
         return new Response(blob, {
             headers: {
                 'Content-Type': 'image/png',
-                'Content-Disposition': `attachment; filename="callview-post-image-${Date.now()}.png"`,
+                'Content-Disposition': `attachment; filename="kindled-post-image-${Date.now()}.png"`,
             },
         });
 

@@ -1,5 +1,6 @@
 import OpenAI from 'openai';
 import { auth } from '@/lib/auth';
+import { brandConfig, getHashtags } from '@/config';
 
 export const runtime = 'nodejs';
 
@@ -13,6 +14,8 @@ function getOpenAI(): OpenAI {
     }
     return openaiClient;
 }
+
+const hashtagList = getHashtags(5).join(', ');
 
 const VIRAL_HACKER_PROMPT = `You are a LinkedIn content strategist who reverse-engineers viral posts. Your job is to analyze a viral post and rewrite it for a new author while keeping the EXACT structural elements that made it go viral.
 
@@ -28,8 +31,8 @@ YOUR TASK:
 2. Then rewrite it completely with:
    - SAME viral structure and format
    - SAME emotional triggers and hooks
-   - DIFFERENT topic/angle (about CallView.ai, sales intelligence, or B2B sales)
-   - Professional but authentic voice of Emil Halili, Co-Founder of CallView
+   - DIFFERENT topic/angle (aligned with the brand's content strategy)
+   - Professional but authentic voice
 
 The rewritten post should feel like a completely original post that just happens to use the same "viral DNA."
 
@@ -37,7 +40,7 @@ IMPORTANT:
 - Match the EXACT line break pattern
 - Match the sentence length rhythm
 - Match the hook style (question, bold claim, confession, etc.)
-- Include CallView-relevant hashtags at the end
+- Include relevant hashtags at the end (choose from: ${hashtagList})
 - Do NOT copy any specific phrases - only the STRUCTURE
 
 Return a JSON object:

@@ -9,7 +9,7 @@ interface TrendItem {
     source: string;
     whyItMatters: string;
     hook: string;
-    callviewAngle: string;
+    brandAngle: string;
     fullPost: string;
     hashtags: string[];
 }
@@ -21,11 +21,11 @@ interface TrendScannerModalProps {
 }
 
 const PRESET_TOPICS = [
-    { label: 'Conversation Intelligence', value: 'conversation intelligence software' },
-    { label: 'AI Sales Coaching', value: 'AI sales coaching tools' },
-    { label: 'Call Analytics', value: 'sales call analytics' },
-    { label: 'Revenue Intelligence', value: 'revenue intelligence platform' },
-    { label: 'Human + AI', value: 'human in the loop AI sales' },
+    { label: 'LinkedIn Content', value: 'LinkedIn content strategy tips' },
+    { label: 'AI Writing', value: 'AI writing tools for social media' },
+    { label: 'B2B Marketing', value: 'B2B content marketing trends' },
+    { label: 'Social Selling', value: 'social selling LinkedIn best practices' },
+    { label: 'Personal Branding', value: 'personal branding LinkedIn' },
 ];
 
 export function TrendScannerModal({ isOpen, onClose, onUsePost }: TrendScannerModalProps) {
@@ -108,7 +108,7 @@ export function TrendScannerModal({ isOpen, onClose, onUsePost }: TrendScannerMo
                                 Trend Scanner
                             </h2>
                             <p className="text-xs text-white/80">
-                                Find trending topics & generate CallView-positioned content
+                                Find trending topics & generate brand-aligned content
                             </p>
                         </div>
                     </div>
@@ -242,11 +242,11 @@ export function TrendScannerModal({ isOpen, onClose, onUsePost }: TrendScannerMo
                                                 </p>
                                             </div>
 
-                                            {/* CallView Angle */}
+                                            {/* Brand Angle */}
                                             <div className="mb-4 p-3 rounded-lg bg-emerald-50 border border-emerald-200">
-                                                <p className="text-xs font-medium text-emerald-700 mb-1">CALLVIEW ANGLE</p>
+                                                <p className="text-xs font-medium text-emerald-700 mb-1">BRAND ANGLE</p>
                                                 <p className="text-sm text-emerald-800">
-                                                    {trend.callviewAngle}
+                                                    {trend.brandAngle}
                                                 </p>
                                             </div>
 

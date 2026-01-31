@@ -1,5 +1,6 @@
 import OpenAI from 'openai';
 import { auth } from '@/lib/auth';
+import { brandConfig } from '@/config';
 
 export const runtime = 'nodejs';
 
@@ -90,7 +91,7 @@ PROSPECT INFO:
 - Title: ${personTitle || 'Unknown'}
 - Company: ${personCompany || 'Unknown'}
 
-YOUR CONTEXT: You are Emil Halili, Co-Founder of CallView.ai - a conversation intelligence platform that uses AI + Human loop to analyze sales calls and provide actionable insights. Your target audience is sales leaders and revenue teams.
+YOUR CONTEXT: You are a content creator using ${brandConfig.company.name}. Generate outreach that is genuine, value-focused, and never pushy.
 
 Generate a personalized 7-step cadence to nurture this prospect from engagement to meeting. ${postContent ? 'Make sure to reference specific insights or phrases from the post to build rapport.' : ''}`;
 

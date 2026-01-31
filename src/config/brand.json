@@ -1,0 +1,95 @@
+{
+  "company": {
+    "name": "Kindled",
+    "tagline": "Spark conversations that convert",
+    "website": "https://kindled.ai",
+    "logo": "/logo.png"
+  },
+  "philosophy": {
+    "core": "Trust cannot be automated. Authority must be earned.",
+    "approach": "Anti-Pitch - Sell the philosophy, not the product",
+    "belief": "Data over Intuition"
+  },
+  "positioning": {
+    "oldWay": {
+      "label": "The Old Way",
+      "description": "Cold outreach, spray-and-pray messaging, automation without authenticity"
+    },
+    "newWay": {
+      "label": "The New Way",
+      "description": "Attract through valuable content, build trust through engagement, convert through relationships"
+    }
+  },
+  "contentPillars": [
+    {
+      "id": "visibility",
+      "name": "The Visibility Gap",
+      "description": "Your ideal customers can't find you if you're not creating content"
+    },
+    {
+      "id": "trust",
+      "name": "The Trust Deficit",
+      "description": "Cold outreach fails because trust hasn't been established"
+    },
+    {
+      "id": "authority",
+      "name": "The Authority Builder",
+      "description": "Consistent valuable content positions you as the expert"
+    }
+  ],
+  "writing": {
+    "readingLevel": "4th grade",
+    "tone": "Professional, slightly contrarian, vulnerable, concise",
+    "style": "Smart Brevity - short sentences, simple words, clear ideas"
+  },
+  "hashtags": {
+    "primary": "#Kindled",
+    "secondary": [
+      "#LinkedInContent",
+      "#ContentStrategy",
+      "#PersonalBranding",
+      "#B2BMarketing",
+      "#ThoughtLeadership",
+      "#InboundMarketing",
+      "#SocialSelling"
+    ]
+  },
+  "bannedWords": [
+    "synergize",
+    "leverage",
+    "paradigm",
+    "elevate",
+    "transform",
+    "game-changer",
+    "utilize",
+    "optimize",
+    "streamline",
+    "empower",
+    "innovative",
+    "cutting-edge",
+    "robust",
+    "scalable",
+    "disrupt"
+  ],
+  "formatting": {
+    "useEmojis": false,
+    "useEmDashes": false,
+    "useMarkdown": false,
+    "useBulletSymbols": false
+  },
+  "cta": {
+    "style": "soft",
+    "examples": [
+      "What's been your experience with this?",
+      "Agree or disagree?",
+      "What would you add?",
+      "Has anyone else noticed this?"
+    ],
+    "avoid": [
+      "DM me",
+      "Book a call",
+      "Link in bio",
+      "Check out my product"
+    ]
+  }
+}

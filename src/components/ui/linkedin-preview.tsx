@@ -8,9 +8,18 @@ interface LinkedInPreviewProps {
     isDark?: boolean;
     onClose: () => void;
     imageUrl?: string;
+    authorName?: string;
+    authorTitle?: string;
 }
 
-export function LinkedInPreview({ content, isDark = false, onClose, imageUrl }: LinkedInPreviewProps) {
+export function LinkedInPreview({
+    content,
+    isDark = false,
+    onClose,
+    imageUrl,
+    authorName = "Your Name",
+    authorTitle = "Your Title • Just now"
+}: LinkedInPreviewProps) {
     const charCount = content.length;
     const isOverLimit = charCount > 3000;
 
@@ -31,7 +40,7 @@ export function LinkedInPreview({ content, isDark = false, onClose, imageUrl }: 
                     <div className="flex items-center gap-3">
                         <img
                             src="/profile.gif"
-                            alt="Emil Halili"
+                            alt={authorName}
                             className="w-12 h-12 rounded-full object-cover"
                         />
                         <div>
@@ -39,13 +48,13 @@ export function LinkedInPreview({ content, isDark = false, onClose, imageUrl }: 
                                 "font-semibold",
                                 isDark ? "text-neutral-100" : "text-gray-900"
                             )}>
-                                Emil Halili
+                                {authorName}
                             </div>
                             <div className={cn(
                                 "text-xs",
                                 isDark ? "text-neutral-400" : "text-gray-500"
                             )}>
-                                Co-Founder at CallView.ai • Just now
+                                {authorTitle}
                             </div>
                         </div>
                     </div>

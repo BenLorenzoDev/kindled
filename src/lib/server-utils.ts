@@ -2,8 +2,8 @@ import { promises as fs } from 'fs'
 import path from 'path'
 
 /**
- * Load the CallView knowledge base from markdown file
- * Used by the Context Injection Pipeline to enrich prompts with product knowledge
+ * Load the knowledge base from markdown file
+ * Used by the Context Injection Pipeline to enrich prompts with brand knowledge
  *
  * @returns Promise<string> - The full text content of the knowledge base
  * @throws Error if the knowledge base file cannot be read

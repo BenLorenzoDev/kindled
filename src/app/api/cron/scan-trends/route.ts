@@ -1,5 +1,6 @@
 import OpenAI from 'openai';
 import nodemailer from 'nodemailer';
+import { brandConfig } from '@/config';
 
 export const runtime = 'nodejs';
 export const maxDuration = 60;
@@ -15,14 +16,14 @@ function getOpenAI(): OpenAI {
     return openaiClient;
 }
 
-// Search keywords for CallView's space
+// Default search keywords for content trends
 const SEARCH_QUERIES = [
-    'conversation intelligence software reviews site:g2.com OR site:reddit.com',
-    'AI sales call analysis trends site:forbes.com OR site:gartner.com',
-    'human in the loop AI sales site:reddit.com OR site:quora.com',
-    'call recording analytics problems site:reddit.com',
-    'sales coaching AI tools 2024 2025',
-    'revenue intelligence platform complaints OR frustrations',
+    'LinkedIn content strategy trends site:reddit.com OR site:medium.com',
+    'AI writing tools for LinkedIn site:forbes.com OR site:techcrunch.com',
+    'B2B content marketing trends site:reddit.com OR site:quora.com',
+    'LinkedIn engagement tips site:reddit.com',
+    'content marketing AI tools 2024 2025',
+    'social selling LinkedIn best practices',
 ];
 
 async function searchWeb(query: string): Promise<string[]> {
@@ -44,7 +45,7 @@ async function searchWeb(query: string): Promise<string[]> {
     return [];
 }
 
-const ANALYSIS_PROMPT = `You are a content strategist for CallView.ai, a conversation intelligence platform that uses AI + Human loop to analyze sales calls.
+const ANALYSIS_PROMPT = `You are a content strategist for ${brandConfig.company.name}. ${brandConfig.company.tagline}
 
 Based on trending discussions, identify the TOP 3 most timely and relevant content opportunities.
 
@@ -52,7 +53,7 @@ For each, provide:
 1. The trend/pain point
 2. Why it's trending NOW
 3. A scroll-stopping LinkedIn hook
-4. The CallView angle
+4. The brand angle
 
 Return JSON array:
 [
@@ -60,7 +61,7 @@ Return JSON array:
         "trend": "The trend",
         "whyNow": "Why this is timely",
         "hook": "The LinkedIn hook",
-        "callviewAngle": "How CallView addresses this",
+        "brandAngle": "How this relates to content strategy",
         "urgency": "high/medium/low"
     }
 ]
@@ -68,7 +69,7 @@ Return JSON array:
 Focus on HIGH URGENCY items that should be posted this week.
 Return ONLY valid JSON.`;
 
-async function sendEmail(trends: Array<{ trend: string; whyNow: string; hook: string; callviewAngle: string; urgency: string }>) {
+async function sendEmail(trends: Array<{ trend: string; whyNow: string; hook: string; brandAngle: string; urgency: string }>) {
     const transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
@@ -117,7 +118,7 @@ async function sendEmail(trends: Array<{ trend: string; whyNow: string; hook: st
         <div class="trend-title">${t.trend}</div>
         <div class="why-now">📈 ${t.whyNow}</div>
         <div class="hook">"${t.hook}"</div>
-        <div class="angle">💡 CallView Angle: ${t.callviewAngle}</div>
+        <div class="angle">💡 Brand Angle: ${t.brandAngle}</div>
     </div>
     `).join('')}
     ` : ''}
@@ -130,7 +131,7 @@ async function sendEmail(trends: Array<{ trend: string; whyNow: string; hook: st
         <div class="trend-title">${t.trend}</div>
         <div class="why-now">📈 ${t.whyNow}</div>
         <div class="hook">"${t.hook}"</div>
-        <div class="angle">💡 CallView Angle: ${t.callviewAngle}</div>
+        <div class="angle">💡 Brand Angle: ${t.brandAngle}</div>
     </div>
     `).join('')}
     ` : ''}
@@ -142,7 +143,7 @@ async function sendEmail(trends: Array<{ trend: string; whyNow: string; hook: st
     </div>
 
     <div class="footer">
-        Sent by LinkedIn Copywriter • Powered by CallView.ai
+        Sent by ${brandConfig.company.name}
     </div>
 </body>
 </html>`;

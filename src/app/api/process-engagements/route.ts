@@ -1,5 +1,6 @@
 import OpenAI from 'openai';
 import { auth } from '@/lib/auth';
+import { brandConfig } from '@/config';
 
 export const runtime = 'nodejs';
 
@@ -71,7 +72,7 @@ ${postContent}
 PEOPLE WHO ENGAGED:
 ${engagementList}
 
-YOUR CONTEXT: I am Emil Halili, Co-Founder of CallView.ai - a conversation intelligence platform. I want to thank these people for engaging and potentially start a conversation that could lead to a business relationship, but I do NOT want to pitch them. Just genuine appreciation and curiosity.
+YOUR CONTEXT: I want to thank these people for engaging and potentially start a conversation that could lead to a business relationship, but I do NOT want to pitch them. Just genuine appreciation and curiosity.
 
 Generate personalized Connection Request and Thank You DM for each person listed.`;
 

@@ -1,5 +1,6 @@
 import OpenAI from 'openai';
 import { auth } from '@/lib/auth';
+import { brandConfig, getHashtags } from '@/config';
 
 export const runtime = 'nodejs';
 
@@ -14,14 +15,14 @@ function getOpenAI(): OpenAI {
     return openaiClient;
 }
 
-// Search keywords for different aspects of CallView's space
+// Default search keywords - can be customized based on brand configuration
 const SEARCH_QUERIES = [
-    'conversation intelligence software reviews site:g2.com OR site:reddit.com',
-    'AI sales call analysis trends site:forbes.com OR site:gartner.com',
-    'human in the loop AI sales site:reddit.com OR site:quora.com',
-    'call recording analytics problems site:reddit.com',
-    'sales coaching AI tools 2024 2025',
-    'revenue intelligence platform complaints OR frustrations',
+    'LinkedIn content strategy trends site:reddit.com OR site:medium.com',
+    'AI writing tools for LinkedIn site:forbes.com OR site:techcrunch.com',
+    'B2B content marketing trends site:reddit.com OR site:quora.com',
+    'LinkedIn engagement tips site:reddit.com',
+    'content marketing AI tools 2024 2025',
+    'social selling LinkedIn best practices',
 ];
 
 async function searchWeb(query: string): Promise<string[]> {
@@ -46,32 +47,34 @@ async function searchWeb(query: string): Promise<string[]> {
     return [];
 }
 
-const ANALYSIS_PROMPT = `You are a content strategist for CallView.ai, a conversation intelligence platform that uses AI + Human loop to analyze sales calls and provide actionable insights.
+const hashtagList = getHashtags(8).join(', ');
+
+const ANALYSIS_PROMPT = `You are a content strategist for ${brandConfig.company.name}. ${brandConfig.company.tagline}
 
 Based on the trending discussions and pain points found, create content opportunities.
 
 For each trend/pain point, provide:
 1. The trend or pain point identified
-2. Why it matters to the target audience (sales leaders, revenue teams)
+2. Why it matters to the target audience
 3. A LinkedIn post hook that addresses this
-4. The CallView angle (how CallView solves this)
-5. A full LinkedIn post draft (200-300 words) positioning CallView as the solution
+4. The brand angle (how this relates to the brand's philosophy)
+5. A full LinkedIn post draft (200-300 words) that provides genuine value
 
 IMPORTANT RULES:
 - Don't be salesy - be educational and value-first
 - Use storytelling and real scenarios
-- Position CallView naturally, not as a hard pitch
-- Focus on the "AI + Human loop" differentiator
+- Position insights naturally, not as a hard pitch
 - Make posts engaging with hooks that stop the scroll
+- Use hashtags from this list: ${hashtagList}
 
 Return a JSON array with this structure:
 [
     {
         "trend": "The trend or pain point",
         "source": "Where this was found (Reddit, G2, etc.)",
-        "whyItMatters": "Why this matters to sales leaders",
+        "whyItMatters": "Why this matters to the audience",
         "hook": "The attention-grabbing first line",
-        "callviewAngle": "How CallView addresses this",
+        "brandAngle": "How this relates to the brand's philosophy",
         "fullPost": "The complete LinkedIn post (200-300 words)",
         "hashtags": ["relevant", "hashtags"]
     }
@@ -128,7 +131,7 @@ Consider common pain points discussed on Reddit, G2, and industry forums:
             model: 'gpt-4o',
             messages: [
                 { role: 'system', content: ANALYSIS_PROMPT },
-                { role: 'user', content: `${searchContext}\n\nGenerate content opportunities for CallView.ai based on these trends and pain points.` }
+                { role: 'user', content: `${searchContext}\n\nGenerate content opportunities based on these trends and pain points.` }
             ],
             temperature: 0.8,
             max_tokens: 4000,
