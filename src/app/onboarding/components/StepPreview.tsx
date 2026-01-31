@@ -129,7 +129,7 @@ export function StepPreview({ strategy, onRegenerate, onSave, isRegenerating }: 
                 <div key={type} className="bg-white rounded-lg p-4 border border-gray-200">
                   <h4 className="font-semibold text-gray-900 mb-2 capitalize">{type} Hooks</h4>
                   <ul className="space-y-1">
-                    {hooks.map((hook, i) => (
+                    {hooks.map((hook: string, i: number) => (
                       <li key={i} className="text-sm text-gray-600 italic">"{hook}"</li>
                     ))}
                   </ul>
@@ -164,7 +164,7 @@ export function StepPreview({ strategy, onRegenerate, onSave, isRegenerating }: 
                 <div key={type} className="bg-white rounded-lg p-4 border border-gray-200">
                   <h4 className="font-semibold text-gray-900 mb-2 capitalize">{type}</h4>
                   <ul className="space-y-1">
-                    {ctas.map((cta, i) => (
+                    {ctas.map((cta: string, i: number) => (
                       <li key={i} className="text-sm text-gray-600">• {cta}</li>
                     ))}
                   </ul>

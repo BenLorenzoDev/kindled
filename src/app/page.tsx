@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import { auth } from '@/lib/auth';
 import { ChatInterface } from '@/components/chat/chat-interface';
 import { UserMenu } from '@/components/auth/user-menu';
+import { hasCompletedOnboarding } from '@/lib/onboarding-status';
 
 export default async function Home() {
   const session = await auth();
@@ -9,6 +10,12 @@ export default async function Home() {
   // Redirect to sign-in if not authenticated
   if (!session?.user) {
     redirect('/signin');
+  }
+
+  // Check if user has completed onboarding
+  const onboardingComplete = await hasCompletedOnboarding();
+  if (!onboardingComplete) {
+    redirect('/onboarding');
   }
 
   return (
