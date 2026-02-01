@@ -44,3 +44,9 @@ next-env.d.ts
 
 # data files
 /data
+
+/src/generated/prisma
+
+# SQLite databases
+*.db
+*.db-journal

@@ -1,68 +1,56 @@
-import { promises as fs } from 'fs';
-import path from 'path';
+import { auth } from '@/lib/auth';
+import { prisma } from '@/lib/db';
 import type { GeneratedStrategy } from '@/app/onboarding/types/onboarding';
 
 export const runtime = 'nodejs';
 
 export async function POST(req: Request) {
   try {
+    // Get authenticated user
+    const session = await auth();
+    if (!session?.user?.id) {
+      return new Response('Unauthorized', { status: 401 });
+    }
+
     const { strategy }: { strategy: GeneratedStrategy } = await req.json();
 
     if (!strategy) {
       return new Response('Missing strategy', { status: 400 });
     }
 
-    // Generate brand.json content
-    const brandJson = {
-      company: {
-        name: strategy.brand.name,
-        tagline: strategy.brand.tagline,
-        website: '',
-      },
-      philosophy: {
-        core: strategy.pillars[0]?.narrative || 'Deliver genuine value through authentic content.',
-        approach: 'Anti-Pitch - Sell the philosophy, not the product',
-      },
-      positioning: {
-        industry: strategy.brand.industry,
-        differentiator: strategy.pillars[0]?.truth || '',
-      },
-      hashtags: {
-        primary: strategy.brand.hashtags.primary,
-        secondary: strategy.brand.hashtags.secondary,
-      },
-      writing: {
-        tone: strategy.voice.tone,
-        styles: strategy.voice.styles,
-        banned_words: [
-          'synergize',
-          'leverage',
-          'paradigm',
-          'elevate',
-          'transform',
-          'disrupt',
-          'revolutionary',
-          'game-changer',
-          'best-in-class',
-          'cutting-edge',
-        ],
-      },
-      cta: {
-        style: 'engagement-first',
-        avoid: ['DM me', 'Book a call', 'Link in bio', 'Check out my...'],
-        examples: strategy.ctas.debate.concat(strategy.ctas.question),
-      },
-    };
-
-    // Generate product-brief.md content
+    // Generate the product brief markdown
     const productBriefMd = generateProductBrief(strategy);
 
-    // Write files
-    const configPath = path.join(process.cwd(), 'src/config/brand.json');
-    const briefPath = path.join(process.cwd(), 'src/lib/knowledge/product-brief.md');
-
-    await fs.writeFile(configPath, JSON.stringify(brandJson, null, 2), 'utf-8');
-    await fs.writeFile(briefPath, productBriefMd, 'utf-8');
+    // Upsert strategy in database (create or update)
+    await prisma.strategy.upsert({
+      where: { userId: session.user.id },
+      update: {
+        brandName: strategy.brand.name,
+        brandTagline: strategy.brand.tagline,
+        brandIndustry: strategy.brand.industry,
+        pillars: JSON.stringify(strategy.pillars),
+        hooks: JSON.stringify(strategy.hooks),
+        ctas: JSON.stringify(strategy.ctas),
+        voice: JSON.stringify(strategy.voice),
+        dailyTemplates: JSON.stringify(strategy.dailyTemplates),
+        hashtags: JSON.stringify(strategy.brand.hashtags),
+        productBrief: productBriefMd,
+        updatedAt: new Date(),
+      },
+      create: {
+        userId: session.user.id,
+        brandName: strategy.brand.name,
+        brandTagline: strategy.brand.tagline,
+        brandIndustry: strategy.brand.industry,
+        pillars: JSON.stringify(strategy.pillars),
+        hooks: JSON.stringify(strategy.hooks),
+        ctas: JSON.stringify(strategy.ctas),
+        voice: JSON.stringify(strategy.voice),
+        dailyTemplates: JSON.stringify(strategy.dailyTemplates),
+        hashtags: JSON.stringify(strategy.brand.hashtags),
+        productBrief: productBriefMd,
+      },
+    });
 
     return Response.json({
       success: true,

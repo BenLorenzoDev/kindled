@@ -1,43 +1,64 @@
-import { promises as fs } from 'fs';
-import path from 'path';
+import { prisma } from './db';
 
 /**
- * Check if the user has completed onboarding by verifying
- * that the product-brief.md has been customized (not template content)
+ * Check if a user has completed onboarding by checking if they have a strategy in the database
  */
-export async function hasCompletedOnboarding(): Promise<boolean> {
+export async function hasCompletedOnboarding(userId: string): Promise<boolean> {
   try {
-    const briefPath = path.join(process.cwd(), 'src/lib/knowledge/product-brief.md');
-    const content = await fs.readFile(briefPath, 'utf-8');
+    const strategy = await prisma.strategy.findUnique({
+      where: { userId },
+      select: { id: true },
+    });
 
-    // Check if the file contains template placeholders
-    // The template has "[Name Your First Pillar]" and similar placeholders
-    const isTemplate = content.includes('[Name Your First Pillar]') ||
-                       content.includes('[What pain does your audience experience?]') ||
-                       content.includes('This is a template');
-
-    // Also check if it's too short (template is ~200 lines, real strategy is ~100+ lines of actual content)
-    const hasSubstantialContent = content.length > 2000;
-
-    return !isTemplate && hasSubstantialContent;
-  } catch {
-    // If file doesn't exist or can't be read, onboarding not complete
+    return strategy !== null;
+  } catch (error) {
+    console.error('[hasCompletedOnboarding] Error:', error);
     return false;
   }
 }
 
 /**
- * Check if brand.json has been customized
+ * Get the user's strategy from the database
  */
-export async function hasBrandConfig(): Promise<boolean> {
+export async function getUserStrategy(userId: string) {
   try {
-    const brandPath = path.join(process.cwd(), 'src/config/brand.json');
-    const content = await fs.readFile(brandPath, 'utf-8');
-    const brand = JSON.parse(content);
+    const strategy = await prisma.strategy.findUnique({
+      where: { userId },
+    });
 
-    // Check if it still has default "Kindled" name
-    return brand?.company?.name && brand.company.name !== 'Kindled';
-  } catch {
-    return false;
+    if (!strategy) return null;
+
+    return {
+      brandName: strategy.brandName,
+      brandTagline: strategy.brandTagline,
+      brandIndustry: strategy.brandIndustry,
+      pillars: JSON.parse(strategy.pillars),
+      hooks: JSON.parse(strategy.hooks),
+      ctas: JSON.parse(strategy.ctas),
+      voice: JSON.parse(strategy.voice),
+      dailyTemplates: JSON.parse(strategy.dailyTemplates),
+      hashtags: JSON.parse(strategy.hashtags),
+      productBrief: strategy.productBrief,
+    };
+  } catch (error) {
+    console.error('[getUserStrategy] Error:', error);
+    return null;
+  }
+}
+
+/**
+ * Get just the product brief markdown for AI context
+ */
+export async function getProductBrief(userId: string): Promise<string | null> {
+  try {
+    const strategy = await prisma.strategy.findUnique({
+      where: { userId },
+      select: { productBrief: true },
+    });
+
+    return strategy?.productBrief || null;
+  } catch (error) {
+    console.error('[getProductBrief] Error:', error);
+    return null;
   }
 }

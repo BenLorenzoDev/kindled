@@ -13,7 +13,7 @@ export default async function Home() {
   }
 
   // Check if user has completed onboarding
-  const onboardingComplete = await hasCompletedOnboarding();
+  const onboardingComplete = await hasCompletedOnboarding(session.user.id);
   if (!onboardingComplete) {
     redirect('/onboarding');
   }
