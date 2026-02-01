@@ -17,11 +17,11 @@ function getOpenAI(): OpenAI {
 const HOOKS_PROMPT = `You are a LinkedIn hook expert. Generate 5 completely different opening hooks for a LinkedIn post.
 
 HOOK TYPES TO USE:
-1. **Contrarian** - Challenge a common belief ("Unpopular opinion: Cold calling is NOT dead")
-2. **Confession** - Vulnerable admission ("I used to be a terrible manager...")
-3. **Number/Stat** - Specific data point ("98% of sales calls go unanalyzed")
-4. **Question** - Provocative question ("What if your CRM is lying to you?")
-5. **Story** - Narrative opener ("Last Tuesday, I lost a $50k deal...")
+1. **Contrarian** - Challenge a common belief ("Unpopular opinion: The common advice is wrong")
+2. **Confession** - Vulnerable admission ("I used to make this mistake constantly...")
+3. **Number/Stat** - Specific data point ("87% of professionals overlook this")
+4. **Question** - Provocative question ("What if everything you believed about this is wrong?")
+5. **Story** - Narrative opener ("Last Tuesday, something happened that changed my perspective...")
 
 RULES:
 - Each hook should be 1-2 lines max

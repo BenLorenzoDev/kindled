@@ -29,10 +29,10 @@ import type { PersonaType, ModeType, TemperatureType, ContentSeries, SeriesPostS
 type ToneType = 'default' | 'inspirational' | 'data-driven' | 'conversational';
 
 const EXAMPLE_PROMPTS = [
-    "Write a post about why listening to call recordings is a waste of time",
-    "Create a horror story about losing a deal due to missed signals",
-    "Write about the danger of managing sales teams by vibes",
-    "Share a confession about being a former micromanager",
+    "Write a post about why most people get content strategy wrong",
+    "Create a story about a lesson learned the hard way in my industry",
+    "Write about a common misconception in my field",
+    "Share a confession about a mistake I made early in my career",
 ];
 
 const TONE_OPTIONS: { value: ToneType; label: string }[] = [

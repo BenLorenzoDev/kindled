@@ -1,6 +1,6 @@
 import OpenAI from 'openai';
 import { auth } from '@/lib/auth';
-import { brandConfig, getHashtags } from '@/config';
+import { getUserStrategy } from '@/lib/onboarding-status';
 
 export const runtime = 'nodejs';
 
@@ -15,21 +15,8 @@ function getOpenAI(): OpenAI {
     return openaiClient;
 }
 
-// Default search keywords - can be customized based on brand configuration
-const SEARCH_QUERIES = [
-    'LinkedIn content strategy trends site:reddit.com OR site:medium.com',
-    'AI writing tools for LinkedIn site:forbes.com OR site:techcrunch.com',
-    'B2B content marketing trends site:reddit.com OR site:quora.com',
-    'LinkedIn engagement tips site:reddit.com',
-    'content marketing AI tools 2024 2025',
-    'social selling LinkedIn best practices',
-];
-
 async function searchWeb(query: string): Promise<string[]> {
     try {
-        // Use a search API or scraping service
-        // For now, we'll use the OpenAI to simulate search results based on known patterns
-        // In production, you'd use SerpAPI, Google Custom Search, or similar
         const response = await fetch(
             `https://www.googleapis.com/customsearch/v1?key=${process.env.GOOGLE_SEARCH_API_KEY}&cx=${process.env.GOOGLE_SEARCH_CX}&q=${encodeURIComponent(query)}&num=5`,
             { next: { revalidate: 3600 } }
@@ -47,9 +34,10 @@ async function searchWeb(query: string): Promise<string[]> {
     return [];
 }
 
-const hashtagList = getHashtags(8).join(', ');
+function buildAnalysisPrompt(brandName: string, industry: string, hashtags: string[]): string {
+    const hashtagList = hashtags.join(', ');
 
-const ANALYSIS_PROMPT = `You are a content strategist for ${brandConfig.company.name}. ${brandConfig.company.tagline}
+    return `You are a content strategist for ${brandName}, a company in the ${industry} space.
 
 Based on the trending discussions and pain points found, create content opportunities.
 
@@ -82,10 +70,35 @@ Return a JSON array with this structure:
 
 Generate 4-5 content opportunities.
 Return ONLY valid JSON, no markdown, no explanation.`;
+}
+
+function buildSearchQueries(industry: string): string[] {
+    return [
+        `${industry} trends 2025 site:reddit.com OR site:medium.com`,
+        `${industry} pain points site:reddit.com OR site:quora.com`,
+        `${industry} LinkedIn content strategy`,
+        `${industry} best practices site:forbes.com OR site:techcrunch.com`,
+    ];
+}
+
+function buildFallbackContext(industry: string, pillars: Array<{ name: string; problem: string }>): string {
+    const pillarProblems = pillars
+        .map(p => `- ${p.problem}`)
+        .join('\n');
+
+    return `Analyze current trends in: ${industry}, content marketing, LinkedIn engagement, thought leadership.
+
+Consider common pain points discussed on Reddit, G2, and industry forums related to ${industry}:
+${pillarProblems}
+- Difficulty standing out in a crowded market
+- Building authentic thought leadership
+- Creating consistent, engaging content
+- Converting LinkedIn engagement into business results`;
+}
 
 export async function POST(req: Request) {
     const session = await auth();
-    if (!session?.user?.email) {
+    if (!session?.user?.id || !session?.user?.email) {
         return new Response("Unauthorized", { status: 401 });
     }
 
@@ -95,9 +108,25 @@ export async function POST(req: Request) {
     }
 
     try {
-        const { customKeywords } = await req.json();
+        // Load user's strategy
+        const strategy = await getUserStrategy(session.user.id);
+        if (!strategy) {
+            return new Response("Please complete onboarding first", { status: 400 });
+        }
 
+        const { customKeywords } = await req.json();
         const openai = getOpenAI();
+
+        const industry = strategy.brandIndustry || 'business';
+        const brandName = strategy.brandName || 'Your Brand';
+        const hashtags = [
+            strategy.hashtags?.primary || '#LinkedIn',
+            ...(strategy.hashtags?.secondary || ['#ContentStrategy', '#ThoughtLeadership'])
+        ];
+        const pillars = strategy.pillars || [];
+
+        // Build search queries based on user's industry
+        const searchQueries = buildSearchQueries(industry);
 
         // Gather search results
         let searchResults: string[] = [];
@@ -105,8 +134,8 @@ export async function POST(req: Request) {
         // If Google Search API is configured, use it
         if (process.env.GOOGLE_SEARCH_API_KEY && process.env.GOOGLE_SEARCH_CX) {
             const queries = customKeywords
-                ? [`${customKeywords} site:reddit.com OR site:g2.com`, `${customKeywords} trends 2025`]
-                : SEARCH_QUERIES.slice(0, 3);
+                ? [`${customKeywords} ${industry} site:reddit.com OR site:g2.com`, `${customKeywords} trends 2025`]
+                : searchQueries.slice(0, 3);
 
             for (const query of queries) {
                 const results = await searchWeb(query);
@@ -117,20 +146,15 @@ export async function POST(req: Request) {
         // Build context for AI analysis
         const searchContext = searchResults.length > 0
             ? `Recent discussions and trends found:\n${searchResults.join('\n\n')}`
-            : `Analyze current trends in: conversation intelligence, AI sales coaching, call analytics, revenue intelligence, sales call recording analysis, human-in-the-loop AI for sales.
+            : buildFallbackContext(industry, pillars);
 
-Consider common pain points discussed on Reddit, G2, and industry forums:
-- Sales managers spending too much time listening to call recordings
-- Lack of actionable insights from conversation data
-- AI tools that miss context and nuance
-- Difficulty coaching remote sales teams
-- CRM data quality issues from manual call logging
-- Compliance and call monitoring challenges`;
+        // Build dynamic prompt based on user's strategy
+        const analysisPrompt = buildAnalysisPrompt(brandName, industry, hashtags);
 
         const response = await openai.chat.completions.create({
             model: 'gpt-4o',
             messages: [
-                { role: 'system', content: ANALYSIS_PROMPT },
+                { role: 'system', content: analysisPrompt },
                 { role: 'user', content: `${searchContext}\n\nGenerate content opportunities based on these trends and pain points.` }
             ],
             temperature: 0.8,
@@ -185,4 +209,3 @@ Consider common pain points discussed on Reddit, G2, and industry forums:
         return new Response("Error scanning trends", { status: 500 });
     }
 }
-// Trigger redeploy

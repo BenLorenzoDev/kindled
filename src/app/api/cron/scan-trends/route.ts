@@ -179,7 +179,7 @@ export async function GET(req: Request) {
 
         const searchContext = searchResults.length > 0
             ? `Recent discussions found:\n${searchResults.join('\n\n')}`
-            : `Analyze current trends in: conversation intelligence, AI sales coaching, call analytics, revenue intelligence.`;
+            : `Analyze current trends in: LinkedIn content strategy, personal branding, thought leadership, B2B marketing, content creation.`;
 
         const response = await openai.chat.completions.create({
             model: 'gpt-4o-mini',

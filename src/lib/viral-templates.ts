@@ -126,43 +126,43 @@ But only when you make it about them.
             "Positions you as expert"
         ],
         whyItWorks: "Specific numbers feel credible and shareable. People save data-driven posts and cite them in their own content.",
-        examplePost: `We analyzed 1.2 million sales calls.
+        examplePost: `We analyzed 10,000 LinkedIn posts.
 
-Here's what separates top performers from everyone else:
+Here's what separates viral content from everything else:
 
-Talk-to-listen ratio.
+The first line.
 
-Average reps: 72% talking, 28% listening
-Top performers: 46% talking, 54% listening
+Average posts: Generic opener, buries the hook
+Top performers: Pattern interrupt in the first 7 words
 
-The best salespeople listen MORE than they talk.
+The best creators grab attention BEFORE they educate.
 
 But here's what nobody tells you:
 
-It's not just about listening.
+It's not just about the hook.
 
-It's WHEN you listen.
+It's the white space.
 
-Top performers go silent after asking:
-- Discovery questions
-- Pricing concerns
-- Objection handling
+Top performers use line breaks after:
+- Bold claims
+- Key insights
+- Emotional moments
 
-They let the silence do the work.
+They let the words breathe.
 
-Most reps fill silence with more pitching.
+Most creators write walls of text.
 
-Top reps let it breathe.
+Top creators give your eyes a break.
 
-Try this on your next call:
+Try this on your next post:
 
-Ask a question.
-Count to 5.
-Don't say a word.
+Write your opening line.
+Read it out loud.
+If it doesn't make you pause, rewrite it.
 
-Watch what happens.
+Watch what happens to your engagement.
 
-#Sales #Data #SalesIntelligence`
+#LinkedIn #ContentStrategy #Writing`
     },
     {
         id: 4,
@@ -234,43 +234,43 @@ Find a room with higher ceilings.
             "Ends with question to drive comments"
         ],
         whyItWorks: "Questions activate the brain differently than statements. People mentally answer before reading, creating investment in your post.",
-        examplePost: `What if your CRM is lying to you?
+        examplePost: `What if your LinkedIn strategy is working against you?
 
 Sounds crazy, right?
 
 But think about it.
 
-Your CRM shows:
-- 50 calls made
-- 10 emails sent
-- 5 meetings booked
+Your analytics show:
+- 20 posts this month
+- 5,000 impressions
+- 50 new connections
 
 Looks productive.
 
 But what it doesn't show:
 
-- 45 of those calls went to voicemail
-- 8 of those emails were templates
-- 3 of those meetings were no-shows
+- 18 of those posts got zero comments
+- Most impressions were from your existing network
+- None of those connections turned into conversations
 
-The data says you're crushing it.
-Reality says you're spinning wheels.
+The data says you're growing.
+Reality says you're stuck.
 
 Here's the truth:
 
-Activity metrics are vanity metrics.
+Vanity metrics are comfortable lies.
 
 What actually matters:
-- Conversations had
-- Problems uncovered
-- Next steps committed
+- Comments from ideal customers
+- DMs that start conversations
+- Content that gets saved and shared
 
-Stop measuring motion.
-Start measuring progress.
+Stop measuring activity.
+Start measuring impact.
 
 What metric do you think is most overrated?
 
-#Sales #CRM #Metrics`
+#LinkedIn #ContentStrategy #Marketing`
     },
     {
         id: 6,
