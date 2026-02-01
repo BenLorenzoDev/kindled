@@ -2,7 +2,8 @@ import { openai } from '@ai-sdk/openai';
 import { streamText } from 'ai';
 import { z } from 'zod';
 import { auth } from '@/lib/auth';
-import { loadKnowledgeBase, hydratePrompt } from '@/lib/server-utils';
+import { hydratePrompt } from '@/lib/server-utils';
+import { getProductBrief } from '@/lib/onboarding-status';
 import { PERSONA_TEMPLATES, MODE_INSTRUCTIONS } from '@/lib/prompts/config';
 import { getMessageContent } from '@/lib/utils';
 import type { PersonaType, ModeType, TemperatureType } from '@/types';
@@ -75,23 +76,28 @@ export async function POST(req: Request) {
         return new Response("Invalid request body", { status: 400 });
     }
 
-    // Load Knowledge Base at runtime to ensure freshness
-    let kbContent: string;
+    // Load user's strategy from database
+    let strategyContent: string;
     try {
-        kbContent = await loadKnowledgeBase();
-        console.log('[API/chat] Knowledge base loaded, length:', kbContent.length);
+        const productBrief = await getProductBrief(session.user.id);
+        if (!productBrief) {
+            console.log('[API/chat] No strategy found - user needs to complete onboarding');
+            return new Response("Please complete onboarding first", { status: 400 });
+        }
+        strategyContent = productBrief;
+        console.log('[API/chat] User strategy loaded, length:', strategyContent.length);
     } catch (error) {
-        console.error('[API/chat] Error loading knowledge base:', error);
-        return new Response("Failed to load knowledge base", { status: 500 });
+        console.error('[API/chat] Error loading user strategy:', error);
+        return new Response("Failed to load strategy", { status: 500 });
     }
 
     // Select template and mode based on request
     const template = PERSONA_TEMPLATES[persona];
     const modeInstructions = MODE_INSTRUCTIONS[mode];
 
-    // Hydrate Prompt with knowledge base content and mode instructions
+    // Hydrate Prompt with user's strategy and mode instructions
     const systemPrompt = hydratePrompt(template, {
-        CONTEXT: kbContent,
+        CONTEXT: strategyContent,
         MODE: modeInstructions,
     });
 

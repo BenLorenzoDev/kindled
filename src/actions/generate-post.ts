@@ -3,7 +3,8 @@
 import { generateText } from 'ai';
 import { openai } from '@ai-sdk/openai';
 import { auth } from '@/lib/auth';
-import { loadKnowledgeBase, hydratePrompt } from '@/lib/server-utils';
+import { hydratePrompt } from '@/lib/server-utils';
+import { getProductBrief } from '@/lib/onboarding-status';
 import { PERSONA_TEMPLATES, MODE_INSTRUCTIONS } from '@/lib/prompts/config';
 import type { PersonaType, ModeType } from '@/types';
 
@@ -20,7 +21,7 @@ export async function generatePostAction(
 
     // Authentication check - verify user is authenticated and whitelisted
     const session = await auth();
-    if (!session?.user?.email) {
+    if (!session?.user?.id || !session?.user?.email) {
         return { success: false, error: "Unauthorized" };
     }
 
@@ -31,16 +32,19 @@ export async function generatePostAction(
     }
 
     try {
-        // Load Knowledge Base using utility function
-        const kbContent = await loadKnowledgeBase();
+        // Load user's strategy from database
+        const strategyContent = await getProductBrief(session.user.id);
+        if (!strategyContent) {
+            return { success: false, error: "Please complete onboarding first" };
+        }
 
         // Select template and mode based on options
         const template = PERSONA_TEMPLATES[persona];
         const modeInstructions = MODE_INSTRUCTIONS[mode];
 
-        // Hydrate prompt with knowledge base content and mode instructions
+        // Hydrate prompt with user's strategy and mode instructions
         const systemPrompt = hydratePrompt(template, {
-            CONTEXT: kbContent,
+            CONTEXT: strategyContent,
             MODE: modeInstructions,
         });
 
